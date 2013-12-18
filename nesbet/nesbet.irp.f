@@ -22,7 +22,7 @@ program nesbet
     Cmax=10000.0d0
     Cmax2=C
 
-    V(7)=2.0d0
+    V(7)=1.0d0
     E=+0.0d0
     niter=1
     D=0.0d0
@@ -61,7 +61,6 @@ program nesbet
 
         m+=1
 
-        write(6,*)'m=',m
 !       do while (DeltaC.lt.CA)
 
         ! calculating D=sum(C_i)
@@ -70,7 +69,6 @@ program nesbet
             D+=(V(i)*V(i))
         enddo
         
-        write(6,*)'D=',D
 
         ! calculating sigma_m=sum(H_m_i*C_i)+EC_m
 
@@ -79,34 +77,33 @@ program nesbet
         enddo
         sigma-=E*V(m)
 
-        write(6,*)'sigma=',sigma,(E-H(m,m))
         ! calculating DeltaC=sigma_m/(E-H_m_m)
 
         DeltaC = sigma/(E-H(m,m))
 
-        write(6,*)'DeltaC=',DeltaC
         ! calculating DeltaD
 
-        DeltaD = (2*V(m)+DeltaC)*DeltaC
+        DeltaD = (2.0d0*V(m)+DeltaC)*DeltaC
 
-        write(6,*)'DeltaD=',DeltaD
         ! calculating DeltaE=sigma_m*DeltaC/(D+DeltaD)
         
         if((D+DeltaD).ne.0)then
         DeltaE = sigma*DeltaC/(D+DeltaD)
         endif
 
-        write(6,*)'DeltaE=',DeltaE
         if(abs(Cmax2).lt.abs(DeltaC))then
             Cmax2=DeltaC
         endif
-        write(6,*)'Cmax2=',Cmax2
 
             
 !       enddo
 
         E+=DeltaE
         V(m)+=DeltaC
+
+        do i=1,rank
+            V(i)=V(i)/D
+        enddo
 
         D=0.0d0
         sigma=0.0d0
@@ -120,16 +117,30 @@ program nesbet
         Cmax=Cmax2
         CA=F*Cmax
         Cmax2=C
-        write(6,*)'iter',niter,Cmax
+        write(6,*)'iter:',niter,'Cmax:',Cmax
         niter+=1
 
     enddo !! main loop !!
-
-    write(6,*)'Eigenvalue',E+DeltaE
+    
+    sigma=0.0d0
+    write(6,*)'converged in :',niter,'iterations'
+    write(6,*)'Eigenvalue:',E
     write(6,*)'Eigenvectors:'
     do i=1,rank
+        sigma+=(V(i)*V(i))
+    enddo
+
+    do i=1,rank
+        V(i)=V(i)/sqrt(sigma)
         write(6,*)V(i)
     enddo
+    sigma=0.0d0
+    do i=1,rank
+        sigma+=(V(i)*V(i))
+    enddo
+
+    write(6,*)'normalized?',sigma
+    
         
    12   format((F8.2,'  '),$)
 end program nesbet
