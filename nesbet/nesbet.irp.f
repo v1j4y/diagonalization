@@ -30,6 +30,8 @@ program nesbet
     m=0
     
     write(6,*)'NESBET:'
+    write(6,*)'starting with:'
+    write(6,*)'E=',E,'m=',m
 
     do k=1,30
         read(33,*)dmat,i,j
