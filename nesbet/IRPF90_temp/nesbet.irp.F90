@@ -68,7 +68,7 @@ subroutine nesbet                                                    ! nesbet.ir
         sigma=sigma-(E*V(m))                                         ! nesbet.irp.f:  80
         DeltaC = sigma/(E-H(m,m))                                    ! nesbet.irp.f:  84
         DeltaD = (2.0d0*V(m)+DeltaC)*DeltaC                          ! nesbet.irp.f:  88
-        if((D+DeltaD).ne.0)then                                      ! nesbet.irp.f:  92
+        if((D+DeltaD).ne.0.0d0)then                                  ! nesbet.irp.f:  92
         DeltaE = sigma*DeltaC/(D+DeltaD)                             ! nesbet.irp.f:  93
         endif                                                        ! nesbet.irp.f:  94
         if(abs(Cmax2).lt.abs(DeltaC))then                            ! nesbet.irp.f:  96
@@ -76,9 +76,6 @@ subroutine nesbet                                                    ! nesbet.ir
         endif                                                        ! nesbet.irp.f:  98
         E=E+(DeltaE)                                                 ! nesbet.irp.f: 103
         V(m)=V(m)+(DeltaC)                                           ! nesbet.irp.f: 104
-        do i=1,rank                                                  ! nesbet.irp.f: 106
-            V(i)=V(i)/D                                              ! nesbet.irp.f: 107
-        enddo                                                        ! nesbet.irp.f: 108
         D=0.0d0                                                      ! nesbet.irp.f: 110
         sigma=0.0d0                                                  ! nesbet.irp.f: 111
         DeltaC=0.0d0                                                 ! nesbet.irp.f: 112

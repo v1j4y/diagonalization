@@ -89,7 +89,7 @@ program nesbet
 
         ! calculating DeltaE=sigma_m*DeltaC/(D+DeltaD)
         
-        if((D+DeltaD).ne.0)then
+        if((D+DeltaD).ne.0.0d0)then
         DeltaE = sigma*DeltaC/(D+DeltaD)
         endif
 
@@ -103,9 +103,9 @@ program nesbet
         E+=DeltaE
         V(m)+=DeltaC
 
-        do i=1,rank
-            V(i)=V(i)/D
-        enddo
+!       do i=1,rank
+!           V(i)=V(i)/D
+!       enddo
 
         D=0.0d0
         sigma=0.0d0
