@@ -12,8 +12,9 @@ program nesbet
 
     open(unit=33,file='FIL33')
     open(unit=44,file='FIL44')
+    open(unit=1,file='converg.dat')
 
-    C=1.0d-9
+    C=7.6d-2
     CA=1.0d0
     F=0.5d0
 
@@ -22,8 +23,13 @@ program nesbet
     Cmax=10000.0d0
     Cmax2=C
 
-    V(7)=1.0d0
-    E=+0.0d0
+!   V(1)=1.0d0
+!   V(2)=1.0d0
+!   V(3)=1.0d0
+!   V(4)=1.0d0
+    V(11)=1.0d0
+!   V(11)=1.0d0
+    E=+0.4d0
     niter=1
     D=0.0d0
     sigma=0.0d0
@@ -31,7 +37,7 @@ program nesbet
     
     write(6,*)'NESBET:'
     write(6,*)'starting with:'
-    write(6,*)'E=',E,'m=',m
+    write(6,*)'E=',E,'m=7'
 
     do k=1,30
         read(33,*)dmat,i,j
@@ -57,13 +63,12 @@ program nesbet
         write(6,*)
     enddo
 
-    do while (abs(Cmax).gt.abs(C))
+    do while (abs(Cmax).gt.abs(C))                                              !! main loop begin !!
         
         do while (m.lt.rank  .or.  abs(DeltaC).gt.abs(CA))
 
         m+=1
 
-!       do while (DeltaC.lt.CA)
 
         ! calculating D=sum(C_i)
 
@@ -98,7 +103,6 @@ program nesbet
         endif
 
             
-!       enddo
 
         E+=DeltaE
         V(m)+=DeltaC
@@ -120,12 +124,13 @@ program nesbet
         CA=F*Cmax
         Cmax2=C
         write(6,*)'iter:',niter,'Cmax:',Cmax
+        write(1,*)niter,Cmax
         niter+=1
 
-    enddo !! main loop !!
+    enddo                                                                   !! main loop end !!
     
     sigma=0.0d0
-    write(6,*)'converged in :',niter,'iterations'
+    write(6,*)'converged in :',niter-1,'iterations'
     write(6,*)'Eigenvalue:',E
     write(6,*)'Eigenvectors:'
     do i=1,rank
