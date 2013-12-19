@@ -14,7 +14,7 @@ program nesbet
     open(unit=44,file='FIL44')
     open(unit=1,file='converg.dat')
 
-    C=7.6d-2
+    C=1.0d-5
     CA=1.0d0
     F=0.5d0
 
@@ -23,13 +23,8 @@ program nesbet
     Cmax=10000.0d0
     Cmax2=C
 
-!   V(1)=1.0d0
-!   V(2)=1.0d0
-!   V(3)=1.0d0
-!   V(4)=1.0d0
-    V(11)=1.0d0
-!   V(11)=1.0d0
-    E=+0.4d0
+    V(2)=1.0d0
+    E=+1.0d0
     niter=1
     D=0.0d0
     sigma=0.0d0
@@ -86,7 +81,9 @@ program nesbet
 
         ! calculating DeltaC=sigma_m/(E-H_m_m)
 
+        if((E-H(m,m)).ne.0.0d0)then
         DeltaC = sigma/(E-H(m,m))
+        endif
 
         ! calculating DeltaD
 
@@ -106,7 +103,8 @@ program nesbet
 
         E+=DeltaE
         V(m)+=DeltaC
-
+        
+!       write(6,*)'m',m,'sigma',sigma,'DeltaC',DeltaC,'DeltaE:',DeltaE,'D:',D
 !       do i=1,rank
 !           V(i)=V(i)/D
 !       enddo
